@@ -1,0 +1,338 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Simplification Agent</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #e0f2fe, #f5f3ff);
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 950px;
+            margin: 40px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+            color: #312e81;
+        }
+
+        .header p {
+            font-size: 17px;
+            color: #64748b;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: #334155;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            resize: vertical;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: end;
+            margin-top: 20px;
+        }
+
+        .level-box {
+            flex: 1;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            background: white;
+        }
+
+        button {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .results {
+            display: none;
+        }
+
+        .result-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+            border-left: 5px solid #6366f1;
+        }
+
+        .result-card h2 {
+            margin-top: 0;
+            color: #3730a3;
+            font-size: 21px;
+        }
+
+        .result-card p {
+            line-height: 1.7;
+            color: #475569;
+        }
+
+        ul {
+            padding-left: 22px;
+        }
+
+        li {
+            margin-bottom: 9px;
+            color: #475569;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ede9fe;
+            color: #5b21b6;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 650px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .header h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>🎓 Course Simplification Agent</h1>
+            <p>Transform complex course content into simple, understandable learning material.</p>
+        </div>
+
+        <div class="card">
+
+            <label for="content">📚 Enter Course Content</label>
+
+            <textarea
+                id="content"
+                rows="9"
+                placeholder="Paste your course notes, concepts, or study material here..."
+            ></textarea>
+
+            <div class="controls">
+
+                <div class="level-box">
+                    <label for="level">🎯 Learning Level</label>
+
+                    <select id="level">
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <button onclick="simplifyContent()">
+                    ✨ Simplify Content
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="results" class="results">
+
+            <div class="result-card">
+                <span class="badge">Simplified Explanation</span>
+                <p id="explanation"></p>
+            </div>
+
+            <div class="result-card">
+                <h2>🧠 Key Concepts</h2>
+                <ul id="concepts"></ul>
+            </div>
+
+            <div class="result-card">
+                <h2>📖 Definitions</h2>
+                <ul id="definitions"></ul>
+            </div>
+
+            <div class="result-card">
+                <h2>🌍 Real-World Example</h2>
+                <p id="example"></p>
+            </div>
+
+            <div class="result-card">
+                <h2>📝 Summary</h2>
+                <p id="summary"></p>
+            </div>
+
+            <div class="result-card">
+                <h2>❓ Practice Questions</h2>
+                <ul id="questions"></ul>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Course Simplification Agent • AI-powered personalized learning
+        </div>
+
+    </div>
+
+    <script>
+
+        function simplifyContent() {
+
+            const content = document.getElementById("content").value;
+            const level = document.getElementById("level").value;
+
+            if (!content.trim()) {
+                alert("Please enter some course content first.");
+                return;
+            }
+
+            fetch("/simplify", {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    content: content,
+                    level: level
+                })
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                document.getElementById("results").style.display = "block";
+
+                document.getElementById("explanation").innerText =
+                    data.explanation;
+
+                document.getElementById("example").innerText =
+                    data.example;
+
+                document.getElementById("summary").innerText =
+                    data.summary;
+
+                document.getElementById("concepts").innerHTML = "";
+
+                data.concepts.forEach(item => {
+                    document.getElementById("concepts").innerHTML +=
+                        "<li>" + item + "</li>";
+                });
+
+                document.getElementById("definitions").innerHTML = "";
+
+                data.definitions.forEach(item => {
+                    document.getElementById("definitions").innerHTML +=
+                        "<li>" + item + "</li>";
+                });
+
+                document.getElementById("questions").innerHTML = "";
+
+                data.questions.forEach(item => {
+                    document.getElementById("questions").innerHTML +=
+                        "<li>" + item + "</li>";
+                });
+
+                document.getElementById("results").scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            })
+
+            .catch(error => {
+                alert("Something went wrong. Please try again.");
+            });
+        }
+
+    </script>
+
+</body>
+</html>
+```
